@@ -8,9 +8,9 @@ importers:
 
   .:
     dependencies:
-      '@lucide/vue':
-        specifier: ^1.20.0
-        version: 1.20.0(vue@3.5.38(typescript@6.0.3))
+      '@iconify-vue/mdi':
+        specifier: ^1.0.3
+        version: 1.0.3(vue@3.5.38(typescript@6.0.3))
       '@supabase/supabase-js':
         specifier: ^2.108.2
         version: 2.108.2
@@ -98,6 +98,17 @@ packages:
   '@emnapi/wasi-threads@1.2.1':
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
 
+  '@iconify-vue/mdi@1.0.3':
+    resolution: {integrity: sha512-+ecc549AkVwdl60RhFfzL0gPc3eVfAUwXgIK1Kio41mIelrWU+4Jm1eSh3fcp3meqM/o/W4X1iRVuvKPTmjsTw==}
+
+  '@iconify/css-vue@1.0.2':
+    resolution: {integrity: sha512-KXG9zXTMmJLi1AF2ket+YWUGdSqFvIMSnCO789uOVpba6SZhqeUttu0JIaEcq2dNlt4oonwdtMyerkpRkAFYhw==}
+    peerDependencies:
+      vue: '>=3.0.0'
+
+  '@iconify/types@2.0.0':
+    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
+
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
 
@@ -113,11 +124,6 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
-
-  '@lucide/vue@1.20.0':
-    resolution: {integrity: sha512-fy0XKdMPSGhhmfTp6evMN69ts7AJnopqflzbYM60a6vbnINhD5H/PbT+VeO9EQCHfSxQQiYBwUcBflbfKU57ng==}
-    peerDependencies:
-      vue: '>=3.0.1'
 
   '@napi-rs/wasm-runtime@1.1.5':
     resolution: {integrity: sha512-AWPoBRJ9tsnVhor4sjO7rkni+7p+2IAEFj6cx06UgP10jkQHqay/36uRV/bFkgrh18D9vb4cr8Q0Pthskgzy+Q==}
@@ -863,6 +869,19 @@ snapshots:
       tslib: 2.8.1
     optional: true
 
+  '@iconify-vue/mdi@1.0.3(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@iconify/css-vue': 1.0.2(vue@3.5.38(typescript@6.0.3))
+    transitivePeerDependencies:
+      - vue
+
+  '@iconify/css-vue@1.0.2(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@iconify/types': 2.0.0
+      vue: 3.5.38(typescript@6.0.3)
+
+  '@iconify/types@2.0.0': {}
+
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -881,10 +900,6 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
-
-  '@lucide/vue@1.20.0(vue@3.5.38(typescript@6.0.3))':
-    dependencies:
-      vue: 3.5.38(typescript@6.0.3)
 
   '@napi-rs/wasm-runtime@1.1.5(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)':
     dependencies:

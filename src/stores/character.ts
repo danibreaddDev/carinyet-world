@@ -67,8 +67,11 @@ export const useCharacterStore = defineStore("character", {
         .from("Characters")
         .select("*")
         .eq("id", selectedId)
-        .single();
-      if (error) return;
+        .maybeSingle();
+      if (error) {
+        console.warn("Character not found or query failed:", error);
+        return;
+      }
       if (data) {
         this.character = data;
         setCachedCharacter(selectedId, data);
