@@ -3,6 +3,7 @@ import { supabase } from "../core/lib/supabaseClient.ts";
 
 export type DbSong = {
   id: string;
+  spotifyId: string;
   message: string;
 };
 
@@ -87,8 +88,8 @@ export const useMusicStore = defineStore("music", {
     },
     async loadSongAndSpotify() {
       await this.loadSongFromDb();
-      if (this.song?.id) {
-        await this.loadSpotifyTrackById(this.song.id);
+      if (this.song?.spotifyId) {
+        await this.loadSpotifyTrackById(this.song.spotifyId);
       }
     },
   },
