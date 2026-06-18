@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import ArrowRight from "@iconify-vue/mdi/arrow-right"
-import cinamonrollImg from '../../assets/character-selector/Cinamonroll.jfif';
-import hellokittyImg from '../../assets/character-selector/Hellokitty.jfif';
-import kuromiImg from '../../assets/character-selector/Kuromi.jfif';
-import lalaImg from '../../assets/character-selector/Lala.jfif';
-import kikiImg from '../../assets/character-selector/Kiki.jfif';
-import mymelodyImg from '../../assets/character-selector/Mymelody.jfif';
-import pochaccoImg from '../../assets/character-selector/Pochacco.jfif';
-import pompurinImg from '../../assets/character-selector/Pompurin.jfif';
-import kuromiActivatedImg from '../../assets/character-selector/KuromiActivated.jpg';
-import gudetamaImg from '../../assets/character-selector/Gudetama.png';
+import cinamonrollImg from '../../../public/assets/character-selector/Cinamonroll.jfif';
+import hellokittyImg from '../../../public/assets/character-selector/Hellokitty.jfif';
+import kuromiImg from '../../../public/assets/character-selector/Kuromi.jfif';
+import lalaImg from '../../../public/assets/character-selector/Lala.jfif';
+import kikiImg from '../../../public/assets/character-selector/Kiki.jfif';
+import mymelodyImg from '../../../public/assets/character-selector/Mymelody.jfif';
+import pochaccoImg from '../../../public/assets/character-selector/Pochacco.jfif';
+import pompurinImg from '../../../public/assets/character-selector/Pompurin.jfif';
+import kuromiActivatedImg from '../../../public/assets/character-selector/KuromiActivated.jpg';
+import gudetamaImg from '../../../public/assets/character-selector/Gudetama.png';
 
 
 type Character = {
