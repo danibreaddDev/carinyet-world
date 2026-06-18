@@ -13,7 +13,7 @@ const handleStartIn = (characterId: string) => {
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center h-full">
+    <div class="flex flex-col items-center justify-center h-screen">
         <div class="font-bold text-pink-400 self-baseline sm:self-center sm:mr-32">
             <h1 class="text-6xl">Bauti</h1>
             <div class="text-2xl text-pink-300">
