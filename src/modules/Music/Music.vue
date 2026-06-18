@@ -11,7 +11,7 @@ const spotifyStore = useSpotifyStore();
 const musicStore = useMusicStore();
 
 onMounted(async () => {
-  await musicStore.loadSongAndSpotify();
+    await musicStore.loadSongAndSpotify();
 });
 </script>
 <template>
@@ -23,11 +23,8 @@ onMounted(async () => {
             </RouterLink>
             <SpotifyUser />
         </div>
-        <MusicSwap
-            :song="musicStore.song"
-            :spotifyTrack="musicStore.spotifyTrack"
-            :isAuthenticated="spotifyStore.isAuthenticated"
-        />
+        <MusicSwap :isAppleMusic="true" :song="musicStore.song" :spotifyTrack="musicStore.spotifyTrack"
+            :isAuthenticated="spotifyStore.isAuthenticated" />
     </div>
 
 </template>

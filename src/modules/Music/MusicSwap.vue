@@ -3,14 +3,15 @@ import SpotifyIcon from '@iconify-vue/mdi/spotify';
 import CardsHeartIcon from '@iconify-vue/mdi/cards-heart';
 import HeartOffIcon from '@iconify-vue/mdi/heart-off';
 import type { DbSong, SpotifyTrack } from '../../stores/music';
-
+import appleMusicIcon from "@iconify-vue/mdi/apple"
 
 const props = defineProps<{
     isAuthenticated: boolean;
     song: DbSong | null;
     spotifyTrack: SpotifyTrack | null;
+    isAppleMusic: boolean;
 }>();
-
+/** Logica para cuando el usuario es premium, puede añadirle la cancion a la reproduccion */
 const openInSpotify = async () => {
     const tokenObj = localStorage.getItem('sb-hjuacsvuuqkexnpfhywo-auth-token');
     if (!tokenObj) {
@@ -57,9 +58,14 @@ const openInSpotify = async () => {
             </div>
             <div class="flex flex-row items-center gap-5">
                 <p class="text-sm text-pink-200">{{ props.song?.message ?? '' }}</p>
-                <button @click="openInSpotify()"
+                <a v-if="isAppleMusic" target="_blank"
+                    :href="`https://music.apple.com/es/album/' + ${props.song?.id}?i=${props.song?.id}`"
                     class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
-                    <SpotifyIcon class="size-6" />
+                </a>
+
+                <button v-else @click=" openInSpotify()"
+                    class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
+                    <appleMusicIcon class="size-6" />
                 </button>
             </div>
         </div>
