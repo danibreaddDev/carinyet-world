@@ -61,11 +61,12 @@ const openInSpotify = async () => {
                 <a v-if="isAppleMusic" target="_blank"
                     :href="`https://music.apple.com/es/album/' + ${props.song?.id}?i=${props.song?.id}`"
                     class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
+                    <appleMusicIcon class="size-6" />
                 </a>
 
                 <button v-else @click=" openInSpotify()"
                     class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
-                    <appleMusicIcon class="size-6" />
+                    <SpotifyIcon class="size-6" />
                 </button>
             </div>
         </div>
