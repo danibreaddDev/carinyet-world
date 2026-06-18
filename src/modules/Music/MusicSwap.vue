@@ -59,7 +59,7 @@ const openInSpotify = async () => {
             <div class="flex flex-row items-center gap-5">
                 <p class="text-sm text-pink-200">{{ props.song?.message ?? '' }}</p>
                 <a v-if="isAppleMusic" target="_blank"
-                    :href="`https://music.apple.com/es/album/'${props.song?.id}?i=${props.song?.id}`"
+                    :href="`https://music.apple.com/es/album/${props.song?.id}?i=${props.song?.id}`"
                     class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
                     <appleMusicIcon class="size-6" />
                 </a>
