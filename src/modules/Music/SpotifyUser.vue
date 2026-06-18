@@ -25,7 +25,7 @@ const signInWithSpotify = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'spotify',
         options: {
-            redirectTo: `${window.location.origin}/music`,
+            redirectTo: `${window.location.origin}`,
             scopes: 'user-read-email user-read-private user-modify-playback-state user-read-playback-state',
         },
     });
