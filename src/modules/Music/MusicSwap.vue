@@ -47,7 +47,6 @@ const openInSpotify = async () => {
         <div class="album flex flex-col gap-5 items-center">
             <img v-if="props.spotifyTrack?.imageUrl" :src="props.spotifyTrack.imageUrl" alt="Portada del Álbum"
                 class="rounded-2xl" />
-            <img v-else src="/assets/music/portada.webp" alt="Portada del Álbum" class="rounded-2xl" />
 
             <h2 class="text-xl text-pink-300 font-bold">
                 {{ props.spotifyTrack?.name ?? 'Título de la Canción' }}
