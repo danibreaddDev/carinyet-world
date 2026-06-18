@@ -28,6 +28,7 @@ const signInWithSpotify = async () => {
             redirectTo: `${window.location.origin}/music`,
             scopes: 'user-read-email user-read-private user-modify-playback-state user-read-playback-state',
         },
+
     });
 
     if (error) console.error('Spotify login error:', error.message);
