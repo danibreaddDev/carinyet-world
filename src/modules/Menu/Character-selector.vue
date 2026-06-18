@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { ArrowRight } from '@lucide/vue';
+import ArrowRight from "@iconify-vue/mdi/arrow-right"
 import cinamonrollImg from '../../assets/character-selector/Cinamonroll.jfif';
 import hellokittyImg from '../../assets/character-selector/Hellokitty.jfif';
 import kuromiImg from '../../assets/character-selector/Kuromi.jfif';
@@ -60,7 +60,7 @@ const selectCharacter = (characterId: string | null) => {
         </div>
         <button @click="selectCharacter(selectedCharacterId)" :disabled="!selectedCharacterId"
             class=" disabled:bg-pink100 disabled:border-pink-200 enabled:bg-pink-300 text-white px-8 py-2 rounded">
-            <ArrowRight :size="48" />
+            <ArrowRight class="size-16" />
         </button>
     </section>
 </template>

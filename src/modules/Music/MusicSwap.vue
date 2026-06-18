@@ -2,7 +2,6 @@
 import SpotifyIcon from '@iconify-vue/mdi/spotify';
 import CardsHeartIcon from '@iconify-vue/mdi/cards-heart';
 import HeartOffIcon from '@iconify-vue/mdi/heart-off';
-import { ref } from 'vue';
 import type { DbSong, SpotifyTrack } from '../../stores/music';
 
 
