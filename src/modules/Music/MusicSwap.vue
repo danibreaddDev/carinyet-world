@@ -65,12 +65,18 @@ const openInSpotify = async () => {
                     </div>
                     <div class="flex flex-row items-center gap-5">
                         <p class="text-sm text-pink-200">{{ props.song?.message ?? '' }}</p>
-                        <a v-if="isAppleMusic" target="_blank"
-                            :href="`https://music.apple.com/es/album/${props.song?.id}?i=${props.song?.id}`"
-                            class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
-                            <appleMusicIcon class="size-6" />
-                        </a>
+                        <div v-if="isAppleMusic" class="flex flex-row gap-2 items-center">
+                            <a target="_blank"
+                                :href="`https://music.apple.com/es/album/${props.song?.id}?i=${props.song?.id}`"
+                                class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
+                                <appleMusicIcon class="size-6" />
+                            </a>
 
+                            <a :href="`https://open.spotify.com/intl-es/track/${props.song?.spotifyId}`" target="_blank"
+                                class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
+                                <SpotifyIcon class="size-6 text-green-500" />
+                            </a>
+                        </div>
                         <button v-else @click=" openInSpotify()"
                             class="flex items-center justify-center gap-2 bg-pink-200 text-pink-400 p-2 rounded-full">
                             <SpotifyIcon class="size-6" />
