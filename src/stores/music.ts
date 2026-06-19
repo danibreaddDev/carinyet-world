@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { supabase } from "../core/lib/supabaseClient.ts";
-import { useCharacterStore } from "./character.ts";
+
 export type DbSong = {
   id: string;
   spotifyId: string;
