@@ -6,13 +6,14 @@ import ProfileCard from '../../components/ProfileCard.vue';
 import SpotifyUser from './SpotifyUser.vue';
 import { useSpotifyStore } from '../../stores/spotify.ts';
 import { useMusicStore } from '../../stores/music.ts';
-
-const spotifyStore = useSpotifyStore();
-const musicStore = useMusicStore();
+import { useCharacterStore } from '../../stores/character.ts';
 
 onMounted(async () => {
-    await musicStore.loadSongAndSpotify();
+    await useMusicStore().loadSongAndSpotify();
 });
+const increaseLevel = () => useMusicStore().increaseLevel(useCharacterStore().character.id);
+const decreaseLevel = () => useMusicStore().decreaseLevel(useCharacterStore().character.id);
+
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
@@ -23,8 +24,9 @@ onMounted(async () => {
             </RouterLink>
             <SpotifyUser />
         </div>
-        <MusicSwap :isAppleMusic="true" :song="musicStore.song" :spotifyTrack="musicStore.spotifyTrack"
-            :isAuthenticated="spotifyStore.isAuthenticated" />
+        <MusicSwap :isAppleMusic="true" :song="useMusicStore().song" :spotifyTrack="useMusicStore().spotifyTrack"
+            :isAuthenticated="useSpotifyStore().isAuthenticated" @increaseLevel="increaseLevel()"
+            @decreaseLevel="decreaseLevel()" />
     </div>
 
 </template>

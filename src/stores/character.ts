@@ -77,5 +77,12 @@ export const useCharacterStore = defineStore("character", {
         setCachedCharacter(selectedId, data);
       }
     },
+    updateLevel(characterId: string, delta: number) {
+      if (this.character.id === characterId) {
+        console.log(delta);
+        this.character.level += delta;
+        setCachedCharacter(characterId, this.character);
+      }
+    },
   },
 });

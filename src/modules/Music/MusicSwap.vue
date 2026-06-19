@@ -11,6 +11,10 @@ const props = defineProps<{
     spotifyTrack: SpotifyTrack | null;
     isAppleMusic: boolean;
 }>();
+const emit = defineEmits<{
+    (e: 'increaseLevel'): void;
+    (e: 'decreaseLevel'): void;
+}>();
 /** Logica para cuando el usuario es premium, puede añadirle la cancion a la reproduccion */
 const openInSpotify = async () => {
     const tokenObj = localStorage.getItem('sb-hjuacsvuuqkexnpfhywo-auth-token');
@@ -72,10 +76,10 @@ const openInSpotify = async () => {
         </div>
 
         <div class="flex flex-row gap-5 items-center w-full justify-around">
-            <button class="text-pink-400 bg-pink-200 rounded-full p-2">
+            <button @click="emit('increaseLevel')" class="text-pink-400 bg-pink-200 rounded-full p-2">
                 <CardsHeartIcon class="size-12" />
             </button>
-            <button class="text-pink-400 bg-pink-200 rounded-full p-2">
+            <button @click="emit('decreaseLevel')" class="text-pink-400 bg-pink-200 rounded-full p-2">
                 <HeartOffIcon class="size-12" />
             </button>
         </div>
