@@ -11,8 +11,8 @@ import { useCharacterStore } from '../../stores/character.ts';
 onMounted(async () => {
     await useMusicStore().loadSongAndSpotify();
 });
-const increaseLevel = () => useMusicStore().increaseLevel(useCharacterStore().character.id);
-const decreaseLevel = () => useMusicStore().decreaseLevel(useCharacterStore().character.id);
+const increaseLevel = () => useCharacterStore().increaseLevel();
+const decreaseLevel = () => useCharacterStore().decreaseLevel();
 
 </script>
 <template>

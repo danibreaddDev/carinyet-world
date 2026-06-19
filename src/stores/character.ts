@@ -39,7 +39,9 @@ function setCachedCharacter(id: string, data: any) {
   cache[id] = { data, cachedAt: Date.now() };
   writeCache(cache);
 }
-
+//levels increase
+const INCREASE_LEVEL = 0.2;
+const DECREASE_LEVEL = -0.2;
 export const useCharacterStore = defineStore("character", {
   state: () => ({
     character: { id: "", level: 0 } as Character,
@@ -77,12 +79,29 @@ export const useCharacterStore = defineStore("character", {
         setCachedCharacter(selectedId, data);
       }
     },
-    updateLevel(characterId: string, delta: number) {
-      if (this.character.id === characterId) {
-        console.log(delta);
-        this.character.level += delta;
-        setCachedCharacter(characterId, this.character);
+    async increaseLevel() {
+      const { error } = await supabase.rpc("update_character_level", {
+        p_character_id: this.character.id,
+        p_level_delta: INCREASE_LEVEL,
+      });
+      if (error) {
+        console.warn("update increase Level failed:", error);
+        return;
       }
+      this.character.level += INCREASE_LEVEL;
+      setCachedCharacter(this.character.id, this.character);
+    },
+    async decreaseLevel() {
+      const { error } = await supabase.rpc("update_character_level", {
+        p_character_id: this.character.id,
+        p_level_delta: DECREASE_LEVEL,
+      });
+      if (error) {
+        console.warn("update descrease Level failed:", error);
+        return;
+      }
+      this.character.level += DECREASE_LEVEL;
+      setCachedCharacter(this.character.id, this.character);
     },
   },
 });

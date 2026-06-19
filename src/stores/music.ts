@@ -15,9 +15,7 @@ export type SpotifyTrack = {
   imageUrl?: string;
   uri?: string;
 };
-//levels increase
-const INCREASE_LEVEL = 0.2;
-const DECREASE_LEVEL = -0.2;
+
 export const useMusicStore = defineStore("music", {
   state: () => ({
     song: null as DbSong | null,
@@ -93,28 +91,6 @@ export const useMusicStore = defineStore("music", {
       if (this.song?.spotifyId) {
         await this.loadSpotifyTrackById(this.song.spotifyId);
       }
-    },
-    async increaseLevel(characterId: string) {
-      const { error } = await supabase.rpc("update_character_level", {
-        p_character_id: characterId,
-        p_level_delta: INCREASE_LEVEL,
-      });
-      if (error) {
-        console.warn("update increase Level failed:", error);
-        return;
-      }
-      useCharacterStore().updateLevel(characterId, INCREASE_LEVEL);
-    },
-    async decreaseLevel(characterId: string) {
-      const { error } = await supabase.rpc("update_character_level", {
-        p_character_id: characterId,
-        p_level_delta: DECREASE_LEVEL,
-      });
-      if (error) {
-        console.warn("update descrease Level failed:", error);
-        return;
-      }
-      useCharacterStore().updateLevel(characterId, DECREASE_LEVEL);
     },
   },
 });
