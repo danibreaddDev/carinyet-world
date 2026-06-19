@@ -11,9 +11,6 @@ import { useCharacterStore } from '../../stores/character.ts';
 onMounted(async () => {
     await useMusicStore().loadSongAndSpotify();
 });
-const increaseLevel = () => useCharacterStore().increaseLevel();
-const decreaseLevel = () => useCharacterStore().decreaseLevel();
-
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
@@ -25,8 +22,8 @@ const decreaseLevel = () => useCharacterStore().decreaseLevel();
             <SpotifyUser />
         </div>
         <MusicSwap :isAppleMusic="true" :song="useMusicStore().song" :spotifyTrack="useMusicStore().spotifyTrack"
-            :isAuthenticated="useSpotifyStore().isAuthenticated" @increaseLevel="increaseLevel()"
-            @decreaseLevel="decreaseLevel()" />
+            :isAuthenticated="useSpotifyStore().isAuthenticated" @increaseLevel=" useCharacterStore().increaseLevel()"
+            @decreaseLevel="useCharacterStore().decreaseLevel()" />
     </div>
 
 </template>
