@@ -92,5 +92,15 @@ export const useMusicStore = defineStore("music", {
         await this.loadSpotifyTrackById(this.song.spotifyId);
       }
     },
+    async deleteSongRecommendation() {
+      const { error } = await supabase
+        .from("MusicRecomendations")
+        .delete()
+        .eq("id", this.song?.id);
+      if (error) {
+        console.warn("error deleting song");
+        return;
+      }
+    },
   },
 });

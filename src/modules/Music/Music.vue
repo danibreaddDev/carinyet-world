@@ -1,16 +1,33 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
+import { RouterLink } from 'vue-router';
 import MusicSwap from './MusicSwap.vue';
 import ArrowLeftCircleIcon from '@iconify-vue/mdi/arrow-left-circle';
 import ProfileCard from '../../components/ProfileCard.vue';
-import SpotifyUser from './SpotifyUser.vue';
+import SpotifyUser from '../../modules/Music/SpotifyUser.vue';
 import { useSpotifyStore } from '../../stores/spotify.ts';
 import { useMusicStore } from '../../stores/music.ts';
 import { useCharacterStore } from '../../stores/character.ts';
 
+const spotifyStore = useSpotifyStore();
+const musicStore = useMusicStore();
+const characterStore = useCharacterStore();
+
 onMounted(async () => {
-    await useMusicStore().loadSongAndSpotify();
+    await musicStore.loadSongAndSpotify();
 });
+
+const handleIncreaseLevel = async () => {
+    await characterStore.increaseLevel();
+    await musicStore.deleteSongRecommendation();
+    await musicStore.loadSongAndSpotify();
+};
+
+const handleDecreaseLevel = async () => {
+    await characterStore.decreaseLevel();
+    await musicStore.deleteSongRecommendation();
+    await musicStore.loadSongAndSpotify();
+};
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
@@ -21,9 +38,8 @@ onMounted(async () => {
             </RouterLink>
             <SpotifyUser />
         </div>
-        <MusicSwap :isAppleMusic="true" :song="useMusicStore().song" :spotifyTrack="useMusicStore().spotifyTrack"
-            :isAuthenticated="useSpotifyStore().isAuthenticated" @increaseLevel=" useCharacterStore().increaseLevel()"
-            @decreaseLevel="useCharacterStore().decreaseLevel()" />
+        <MusicSwap :isAppleMusic="true" :song="musicStore.song" :spotifyTrack="musicStore.spotifyTrack"
+            :isAuthenticated="spotifyStore.isAuthenticated" @increaseLevel="handleIncreaseLevel"
+            @decreaseLevel="handleDecreaseLevel" />
     </div>
-
 </template>
