@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify-vue/boxicons": "^1.0.2",
     "@iconify-vue/mdi": "^1.0.3",
     "@supabase/supabase-js": "^2.108.2",
     "@tailwindcss/vite": "^4.3.1",

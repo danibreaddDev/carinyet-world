@@ -31,13 +31,14 @@ const handleDecreaseLevel = async () => {
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
+        <RouterLink to="/home" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
+            <ArrowLeftCircleIcon class="text-pink-400 size-8" />
+        </RouterLink>
+
         <ProfileCard />
-        <div class="flex flex-row gap-5 justify-between items-center">
-            <RouterLink to="/home" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
-                <ArrowLeftCircleIcon class="text-pink-400 size-8" />
-            </RouterLink>
-            <SpotifyUser />
-        </div>
+
+        <SpotifyUser />
+
         <MusicSwap :isAppleMusic="true" :song="musicStore.song" :spotifyTrack="musicStore.spotifyTrack"
             :isAuthenticated="spotifyStore.isAuthenticated" @increaseLevel="handleIncreaseLevel"
             @decreaseLevel="handleDecreaseLevel" />

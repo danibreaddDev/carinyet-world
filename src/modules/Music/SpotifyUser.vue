@@ -68,7 +68,7 @@ onUnmounted(() => {
                 class="size-10 rounded-full object-cover">
             <span>{{ spotifyStore.user?.displayName }}</span>
         </div>
-        <div v-else class="flex flex-row gap-2 items-center border bg-white">
+        <div v-else class="flex flex-row gap-2 items-center border bg-white w-fit">
             <SpotifyIcon class="size-12 text-green-500" />
 
         </div>

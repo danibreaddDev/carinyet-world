@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import ArrowRight from "@iconify-vue/mdi/arrow-right"
+import ArrowRightCircleIcon from "@iconify-vue/mdi/arrow-right-circle"
 import cinamonrollImg from '../../../public/assets/character-selector/Cinamonroll.jfif';
 import hellokittyImg from '../../../public/assets/character-selector/Hellokitty.jfif';
 import kuromiImg from '../../../public/assets/character-selector/Kuromi.jfif';
@@ -58,9 +58,10 @@ const selectCharacter = (characterId: string | null) => {
                 @keydown.space.prevent="selectedCharacterId = character.id">
             </div>
         </div>
+
         <button @click="selectCharacter(selectedCharacterId)" :disabled="!selectedCharacterId"
-            class=" disabled:bg-pink100 disabled:border-pink-200 enabled:bg-pink-300 text-white px-8 py-2 rounded">
-            <ArrowRight class="size-16" />
+            class="  disabled:border-pink-200 enabled:bg-pink-200 text-pink-200 border p-2  rounded-full w-fit">
+            <ArrowRightCircleIcon class="text-pink-400 size-16" />
         </button>
     </section>
 </template>

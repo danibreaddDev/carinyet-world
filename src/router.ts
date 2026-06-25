@@ -15,6 +15,11 @@ const routes = [
     name: "Music",
     component: () => import("./modules/Music/Music.vue"),
   },
+  {
+    path: "/planner",
+    name: "Planner",
+    component: () => import("./modules/Planner/Planner.vue"),
+  },
 ];
 export const router = createRouter({
   history: createWebHistory(),
