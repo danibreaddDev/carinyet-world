@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
-import { RouterLink, RouterView } from 'vue-router';
+import { RouterLink } from 'vue-router';
 import ArrowLeftCircleIcon from '@iconify-vue/mdi/arrow-left-circle';
 import plusIcon from '@iconify-vue/mdi/plus-circle';
 import ProfileCard from '../../components/ProfileCard.vue';
