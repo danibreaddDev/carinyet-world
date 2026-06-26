@@ -1,15 +1,8 @@
 <script setup lang="ts">
 import CharacterSelector from './Character-selector.vue';
-import { useRouter } from 'vue-router';
+import { useMenu } from './useMenu.ts';
 
-const router = useRouter();
-
-const handleStartIn = (characterId: string) => {
-    console.log('Character selected:', characterId);
-    sessionStorage.setItem('selectedCharacter', characterId);
-    router.push({ name: 'Home' });
-    // You can add additional logic here, such as navigating to another page or updating the state
-};
+const { handleStartIn } = useMenu();
 </script>
 
 <template>

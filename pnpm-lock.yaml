@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify-vue/boxicons':
+        specifier: ^1.0.2
+        version: 1.0.2(vue@3.5.38(typescript@6.0.3))
       '@iconify-vue/mdi':
         specifier: ^1.0.3
         version: 1.0.3(vue@3.5.38(typescript@6.0.3))
@@ -97,6 +100,9 @@ packages:
 
   '@emnapi/wasi-threads@1.2.1':
     resolution: {integrity: sha512-uTII7OYF+/Mes/MrcIOYp5yOtSMLBWSIoLPpcgwipoiKbli6k322tcoFsxoIIxPDqW01SQGAgko4EzZi2BNv2w==}
+
+  '@iconify-vue/boxicons@1.0.2':
+    resolution: {integrity: sha512-ne+Zj7c3mshrZBeK3xgH5tdJ52JU6vd8DnQwQskTmM8BX+M4je0HqGei4OquAsLe2NV3kHIU7hugTJ9sUe/1WA==}
 
   '@iconify-vue/mdi@1.0.3':
     resolution: {integrity: sha512-+ecc549AkVwdl60RhFfzL0gPc3eVfAUwXgIK1Kio41mIelrWU+4Jm1eSh3fcp3meqM/o/W4X1iRVuvKPTmjsTw==}
@@ -868,6 +874,12 @@ snapshots:
     dependencies:
       tslib: 2.8.1
     optional: true
+
+  '@iconify-vue/boxicons@1.0.2(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@iconify/css-vue': 1.0.2(vue@3.5.38(typescript@6.0.3))
+    transitivePeerDependencies:
+      - vue
 
   '@iconify-vue/mdi@1.0.3(vue@3.5.38(typescript@6.0.3))':
     dependencies:
