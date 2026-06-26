@@ -10,11 +10,12 @@ const { spotifyStore, musicStore, handleIncreaseLevel, handleDecreaseLevel } = u
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
-        <RouterLink to="/home" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
-            <ArrowLeftCircleIcon class="text-pink-400 size-8" />
-        </RouterLink>
-
-        <ProfileCard />
+        <div class="flex items-center justify-between gap-4 rounded-3xl border border-pink-200 bg-white p-4 shadow-sm">
+            <RouterLink to="/home" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
+                <ArrowLeftCircleIcon class="text-pink-400 size-8" />
+            </RouterLink>
+            <ProfileCard />
+        </div>
 
         <SpotifyUser />
 
