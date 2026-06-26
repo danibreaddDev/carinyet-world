@@ -16,9 +16,20 @@ const routes = [
     component: () => import("./modules/Music/Music.vue"),
   },
   {
-    path: "/planner",
-    name: "Planner",
-    component: () => import("./modules/Planner/Planner.vue"),
+    path: "/plans",
+    children: [
+      {
+        path: "",
+        name: "Plans",
+        component: () => import("./modules/Plans/Plans.vue"),
+      },
+      {
+        path: "planner",
+        name: "Planner",
+        component: () => import("./modules/Plans/PlannerForm.vue"),
+        meta: { requiresAuth: true },
+      },
+    ],
   },
 ];
 export const router = createRouter({

@@ -1,5 +1,6 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { supabase } from "../../core/lib/supabaseClient.ts";
+import { useSpotifyStore } from "../../stores/spotify.ts";
 
 export type Plan = {
   id: string;
@@ -38,7 +39,7 @@ const planMoods: PlanMood[] = [
 
 const plans: Plan[] = [
   {
-    id: "dinner",
+    id: "cena",
     title: "Cena",
     image: "/assets/planner/dinner.png",
     moods: ["nonchalant", "chalant"],
@@ -50,25 +51,25 @@ const plans: Plan[] = [
     moods: ["nonchalant", "chalant"],
   },
   {
-    id: "cinema",
+    id: "cine",
     title: "Cine",
     image: "/assets/planner/cinema.png",
     moods: ["nonchalant", "chalant"],
   },
   {
-    id: "walk",
+    id: "caminar",
     title: "Paseito",
     image: "/assets/planner/walk.png",
     moods: ["nonchalant", "chalant"],
   },
   {
-    id: "surprise",
+    id: "sorpresa",
     title: "sorpresa",
     image: "/assets/planner/surprise.png",
     moods: ["chalant", "nonchalant"],
   },
   {
-    id: "art",
+    id: "arte",
     title: "Arte",
     image: "/assets/planner/art.png",
     moods: ["nonchalant"],
@@ -159,7 +160,7 @@ export function usePlanner() {
     plans.filter((plan) => selectedPlans.value.includes(plan.id)),
   );
 
-  const dinnerSelected = computed(() => selectedPlans.value.includes("dinner"));
+  const dinnerSelected = computed(() => selectedPlans.value.includes("cena"));
 
   const selectedFoodInfo = computed(() =>
     foodOptions.find((food) => food.id === selectedFood.value),
@@ -241,7 +242,7 @@ export function usePlanner() {
       ? selectedPlans.value.filter((id) => id !== planId)
       : [...selectedPlans.value, planId];
 
-    if (!selectedPlans.value.includes("dinner")) {
+    if (!selectedPlans.value.includes("cena")) {
       selectedFood.value = "";
     }
   }
@@ -268,6 +269,7 @@ export function usePlanner() {
       plans: selectedPlans.value,
       food: selectedFood.value || null,
       note: pickupNote.value || null,
+      user_id: useSpotifyStore().user?.id,
       created_at: new Date().toISOString(),
     };
 
