@@ -31,6 +31,18 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: () => import("./modules/Admin/Admin.vue"),
+    children: [
+      {
+        path: "music",
+        name: "AdminMusic",
+        component: () => import("./modules/Admin/MusicRecomendationForm.vue"),
+      },
+    ],
+  },
 ];
 export const router = createRouter({
   history: createWebHistory(),

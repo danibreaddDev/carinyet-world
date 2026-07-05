@@ -4,6 +4,7 @@ import { supabase } from "../core/lib/supabaseClient.ts";
 export type DbSong = {
   id: string;
   spotifyId: string;
+  appleMusicId?: string | null;
   message: string;
 };
 
