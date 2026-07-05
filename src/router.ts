@@ -16,6 +16,11 @@ const routes = [
     component: () => import("./modules/Music/Music.vue"),
   },
   {
+    path: "/music/recomendation",
+    name: "MusicRecomendation",
+    component: () => import("./modules/Music/MusicRecomendationForm.vue"),
+  },
+  {
     path: "/plans",
     children: [
       {
