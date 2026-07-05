@@ -1,9 +1,10 @@
 import { defineStore } from "pinia";
 import { supabase } from "../core/lib/supabaseClient.ts";
-
+import { useUserStore } from "./user.ts";
 export type DbSong = {
   id: string;
   spotifyId: string;
+  appleMusicId?: string | null;
   message: string;
 };
 
@@ -16,6 +17,12 @@ export type SpotifyTrack = {
   uri?: string;
 };
 
+export type recommendation = {
+  id: string;
+  spotifyId: string;
+  message: string;
+  user_id?: string;
+};
 export const useMusicStore = defineStore("music", {
   state: () => ({
     song: null as DbSong | null,
@@ -36,6 +43,7 @@ export const useMusicStore = defineStore("music", {
       const { data, error } = await supabase
         .from("MusicRecomendations")
         .select("*")
+        .neq("user_id", useUserStore().user?.id)
         .limit(1)
         .maybeSingle();
       if (error) {
@@ -91,6 +99,18 @@ export const useMusicStore = defineStore("music", {
       if (this.song?.spotifyId) {
         await this.loadSpotifyTrackById(this.song.spotifyId);
       }
+    },
+    async saveRecommendation(recommendation: recommendation) {
+      const { error } = await supabase
+        .from("MusicRecomendations")
+        .insert([recommendation]);
+
+      if (error) {
+        console.warn("Music recommendation insert failed:", error);
+        return false;
+      }
+
+      return true;
     },
     async deleteSongRecommendation() {
       const { error } = await supabase
