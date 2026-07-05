@@ -3,8 +3,9 @@ import MusicNoteIcon from '@iconify-vue/mdi/music-note';
 import SpotifyIcon from '@iconify-vue/mdi/spotify';
 import AppleIcon from '@iconify-vue/mdi/apple';
 import SendIcon from '@iconify-vue/mdi/send';
-import { useAdmin } from './useAdmin';
-
+import { useMusicPage } from './useMusicPage.ts';
+import ArrowLeftCircleIcon from '@iconify-vue/mdi/arrow-left-circle';
+import ProfileCard from '../../components/ProfileCard.vue';
 const {
   appleMusicId,
   spotifyId,
@@ -15,18 +16,23 @@ const {
   setAppleMusicId,
   setSpotifyId,
   handleSubmit,
-} = useAdmin();
+} = useMusicPage();
 </script>
 
 <template>
-  <section class="min-h-screen bg-pink-50 px-4 py-6 sm:px-6 lg:px-8">
+  <section class="flex flex-col gap-5">
+      <div class="flex items-center justify-between gap-4 rounded-3xl border border-pink-200 bg-white p-4 shadow-sm">
+            <RouterLink to="/music" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
+                <ArrowLeftCircleIcon class="text-pink-400 size-8" />
+            </RouterLink>
+            <ProfileCard />
+        </div>
     <div class="mx-auto flex max-w-2xl flex-col gap-6 rounded-3xl border border-pink-200 bg-white p-5 shadow-sm sm:p-8">
       <div class="flex items-center gap-3">
         <div class="rounded-2xl bg-pink-100 p-3 text-pink-500">
           <MusicNoteIcon class="size-7" />
         </div>
         <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.3em] text-pink-300">Admin</p>
           <h1 class="text-2xl font-bold text-pink-500">Nueva recomendación</h1>
         </div>
       </div>

@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router';
 import MusicSwap from './MusicSwap.vue';
 import ArrowLeftCircleIcon from '@iconify-vue/mdi/arrow-left-circle';
+import RecomendationIcon from "@iconify-vue/mdi/music-note-plus";
 import ProfileCard from '../../components/ProfileCard.vue';
 import SpotifyUser from '../../modules/Music/SpotifyUser.vue';
 import { useMusicPage } from './useMusicPage.ts';
@@ -16,9 +17,17 @@ const { spotifyStore, musicStore, handleIncreaseLevel, handleDecreaseLevel } = u
             </RouterLink>
             <ProfileCard />
         </div>
-
+        <div class="flex flex-row gap-5 justify-between items-center">
+        <div v-if="spotifyStore.isAuthenticated">
+            <RouterLink
+                to="/music/recomendation"
+                class="rounded-2xl bg-pink-400 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-500 block"
+            >
+                <RecomendationIcon class="size-5" />
+            </RouterLink>
+        </div>
         <SpotifyUser />
-
+        </div>
         <MusicSwap :isAppleMusic="true" :song="musicStore.song" :spotifyTrack="musicStore.spotifyTrack"
             :isAuthenticated="spotifyStore.isAuthenticated" @increaseLevel="handleIncreaseLevel"
             @decreaseLevel="handleDecreaseLevel" />

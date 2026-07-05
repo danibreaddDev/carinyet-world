@@ -16,6 +16,11 @@ const routes = [
     component: () => import("./modules/Music/Music.vue"),
   },
   {
+    path: "/music/recomendation",
+    name: "MusicRecomendation",
+    component: () => import("./modules/Music/MusicRecomendationForm.vue"),
+  },
+  {
     path: "/plans",
     children: [
       {
@@ -28,18 +33,6 @@ const routes = [
         name: "Planner",
         component: () => import("./modules/Plans/PlannerForm.vue"),
         meta: { requiresAuth: true },
-      },
-    ],
-  },
-  {
-    path: "/admin",
-    name: "Admin",
-    component: () => import("./modules/Admin/Admin.vue"),
-    children: [
-      {
-        path: "music",
-        name: "AdminMusic",
-        component: () => import("./modules/Admin/MusicRecomendationForm.vue"),
       },
     ],
   },
