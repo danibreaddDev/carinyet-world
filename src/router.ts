@@ -12,13 +12,23 @@ const routes = [
   },
   {
     path: "/music",
-    name: "Music",
-    component: () => import("./modules/Music/Music.vue"),
-  },
-  {
-    path: "/music/recomendation",
-    name: "MusicRecomendation",
-    component: () => import("./modules/Music/MusicRecomendationForm.vue"),
+    children: [
+      {
+        path: "",
+        name: "Music",
+        component: () => import("./modules/Music/Music.vue"),
+      },
+      {
+        path: "recomendation",
+        name: "MusicRecomendation",
+        component: () => import("./modules/Music/MusicRecomendationForm.vue"),
+      },
+      {
+        path: "feedback",
+        name: "MusicFeedback",
+        component: () => import("./modules/Music/MusicFeedback.vue"),
+      },
+    ],
   },
   {
     path: "/plans",

@@ -25,6 +25,7 @@ export type recommendation = {
 };
 
 export type SongRatingPayload = {
+  image_url: string;
   song: string;
   artist: string;
   rating: number;
@@ -36,6 +37,7 @@ export const useMusicStore = defineStore("music", {
   state: () => ({
     song: null as DbSong | null,
     spotifyTrack: null as SpotifyTrack | null,
+    feedbacks: [] as SongRatingPayload[],
   }),
   getters: {
     hasSong: (state) => Boolean(state.song?.id),
@@ -47,6 +49,9 @@ export const useMusicStore = defineStore("music", {
     },
     setSpotifyTrack(track: SpotifyTrack | null) {
       this.spotifyTrack = track;
+    },
+    setFeedbacks(feedbacks: SongRatingPayload[]) {
+      this.feedbacks = feedbacks;
     },
     async loadSongFromDb() {
       const { data, error } = await supabase
@@ -108,6 +113,17 @@ export const useMusicStore = defineStore("music", {
       if (this.song?.spotifyId) {
         await this.loadSpotifyTrackById(this.song.spotifyId);
       }
+    },
+    async loadFeedbacks() {
+      const { data, error } = await supabase
+        .from("SongRating")
+        .select("*")
+        .neq("user_id", useUserStore().user?.id);
+      if (error) {
+        console.warn("Song rating query failed:", error);
+        return;
+      }
+      this.setFeedbacks(data ?? []);
     },
     async saveRecommendation(recommendation: recommendation) {
       const { error } = await supabase

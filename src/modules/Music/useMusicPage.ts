@@ -1,4 +1,4 @@
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useMusicStore } from "../../stores/music.ts";
 import { useSpotifyStore } from "../../stores/spotify.ts";
 import { useCharacterStore } from "../../stores/character.ts";
@@ -95,14 +95,11 @@ export function useMusicPage() {
     isSubmitting.value = false;
   };
 
-  onMounted(async () => {
-    await musicStore.loadSongAndSpotify();
-  });
-
   const saveFeedbackIfNeeded = async (feedbackPayload?: FeedbackPayload) => {
     if (!feedbackPayload) return true;
 
     const saved = await musicStore.saveSongRating({
+      image_url: musicStore.spotifyTrack?.imageUrl ?? "",
       song:
         musicStore.spotifyTrack?.name ??
         musicStore.song?.spotifyId ??

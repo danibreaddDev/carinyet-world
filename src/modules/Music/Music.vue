@@ -3,11 +3,16 @@ import { RouterLink } from 'vue-router';
 import MusicSwap from './MusicSwap.vue';
 import ArrowLeftCircleIcon from '@iconify-vue/mdi/arrow-left-circle';
 import RecomendationIcon from "@iconify-vue/mdi/music-note-plus";
+import feedbackIcon from "@iconify-vue/mdi/feedback";
 import ProfileCard from '../../components/ProfileCard.vue';
 import SpotifyUser from '../../modules/Music/SpotifyUser.vue';
 import { useMusicPage } from './useMusicPage.ts';
+import { onMounted } from 'vue';
 
 const { spotifyStore, musicStore, handleIncreaseLevel, handleDecreaseLevel } = useMusicPage();
+onMounted(async () => {
+    await musicStore.loadSongAndSpotify();
+  });
 </script>
 <template>
     <div class="flex flex-col gap-5 w-full">
@@ -18,12 +23,18 @@ const { spotifyStore, musicStore, handleIncreaseLevel, handleDecreaseLevel } = u
             <ProfileCard />
         </div>
         <div class="flex flex-row gap-5 justify-between items-center">
-        <div v-if="spotifyStore.isAuthenticated">
+        <div v-if="spotifyStore.isAuthenticated" class="flex flex-row gap-5 justify-between items-center">
             <RouterLink
                 to="/music/recomendation"
                 class="rounded-2xl bg-pink-400 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-500 block"
             >
                 <RecomendationIcon class="size-5" />
+            </RouterLink>
+            <RouterLink
+                to="/music/feedback"
+                class="rounded-2xl bg-pink-400 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-500 block"
+            >
+                <feedbackIcon class="size-5" />
             </RouterLink>
         </div>
         <SpotifyUser />
