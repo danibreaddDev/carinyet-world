@@ -36,12 +36,6 @@ onMounted(async () => {
             >
                 <feedbackIcon class="size-8 text-pink-400" />
             </RouterLink>
-            <RouterLink
-                to="/music/feedback"
-                class="rounded-2xl bg-pink-400 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-500 block"
-            >
-                <feedbackIcon class="size-5" />
-            </RouterLink>
         </div>
         <SpotifyUser />
         </div>
