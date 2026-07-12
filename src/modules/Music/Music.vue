@@ -26,9 +26,15 @@ onMounted(async () => {
         <div v-if="spotifyStore.isAuthenticated" class="flex flex-row gap-5 justify-between items-center">
             <RouterLink
                 to="/music/recomendation"
-                class="rounded-2xl bg-pink-400 px-4 py-3 text-sm font-semibold text-white transition hover:bg-pink-500 block"
+                class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit"
             >
-                <RecomendationIcon class="size-5" />
+                <RecomendationIcon class="size-8 text-pink-400" />
+            </RouterLink>
+            <RouterLink
+                to="/music/feedback"
+                class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit"
+            >
+                <feedbackIcon class="size-8 text-pink-400" />
             </RouterLink>
             <RouterLink
                 to="/music/feedback"
