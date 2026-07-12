@@ -23,6 +23,15 @@ export type recommendation = {
   message: string;
   user_id?: string;
 };
+
+export type SongRatingPayload = {
+  song: string;
+  artist: string;
+  rating: number;
+  feedback: string;
+  user_id?: string;
+};
+
 export const useMusicStore = defineStore("music", {
   state: () => ({
     song: null as DbSong | null,
@@ -107,6 +116,16 @@ export const useMusicStore = defineStore("music", {
 
       if (error) {
         console.warn("Music recommendation insert failed:", error);
+        return false;
+      }
+
+      return true;
+    },
+    async saveSongRating(rating: SongRatingPayload) {
+      const { error } = await supabase.from("SongRating").insert([rating]);
+
+      if (error) {
+        console.warn("Song rating insert failed:", error);
         return false;
       }
 
