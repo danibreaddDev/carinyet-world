@@ -1,8 +1,13 @@
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useMusicStore } from "../../stores/music.ts";
 import { useSpotifyStore } from "../../stores/spotify.ts";
 import { useCharacterStore } from "../../stores/character.ts";
 import { useUserStore } from "../../stores/user.ts";
+
+type FeedbackPayload = {
+  rating: number;
+  feedback: string;
+};
 
 const normalizeMusicValue = (value: string, type: "spotify" | "apple") => {
   const trimmedValue = value.trim();
@@ -90,17 +95,46 @@ export function useMusicPage() {
     isSubmitting.value = false;
   };
 
-  onMounted(async () => {
-    await musicStore.loadSongAndSpotify();
-  });
+  const saveFeedbackIfNeeded = async (feedbackPayload?: FeedbackPayload) => {
+    if (!feedbackPayload) return true;
 
-  const handleIncreaseLevel = async () => {
+    const saved = await musicStore.saveSongRating({
+      image_url: musicStore.spotifyTrack?.imageUrl ?? "",
+      song:
+        musicStore.spotifyTrack?.name ??
+        musicStore.song?.spotifyId ??
+        "Canción sin nombre",
+      artist:
+        musicStore.spotifyTrack?.artists?.join(", ") ?? "Artista desconocido",
+      rating: feedbackPayload.rating,
+      feedback: feedbackPayload.feedback,
+      user_id: useUserStore().user?.id,
+    });
+
+    if (!saved) {
+      submitError.value = "No se pudo guardar tu valoración.";
+      submitSuccess.value = "";
+      return false;
+    }
+
+    submitSuccess.value = "Gracias por tu feedback.";
+    submitError.value = "";
+    return true;
+  };
+
+  const handleIncreaseLevel = async (feedbackPayload?: FeedbackPayload) => {
+    const shouldContinue = await saveFeedbackIfNeeded(feedbackPayload);
+    if (!shouldContinue) return;
+
     await characterStore.increaseLevel();
     await musicStore.deleteSongRecommendation();
     await musicStore.loadSongAndSpotify();
   };
 
-  const handleDecreaseLevel = async () => {
+  const handleDecreaseLevel = async (feedbackPayload?: FeedbackPayload) => {
+    const shouldContinue = await saveFeedbackIfNeeded(feedbackPayload);
+    if (!shouldContinue) return;
+
     await characterStore.decreaseLevel();
     await musicStore.deleteSongRecommendation();
     await musicStore.loadSongAndSpotify();
