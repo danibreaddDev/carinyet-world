@@ -44,12 +44,11 @@ watch(
 
         <div v-else class="flex flex-col gap-10 p-4">
             <div class="flex flex-row items-center justify-between">
-                <SpotifyUser />
                 <RouterLink to="/plans/planner" class="text-pink-200 border p-2 bg-pink-200 rounded-full w-fit">
                     <plusIcon class="text-pink-400 size-8" />
                 </RouterLink>
+                <SpotifyUser />
             </div>
-
             <PlansList :plans="plansStore.plans" />
         </div>
     </section>
