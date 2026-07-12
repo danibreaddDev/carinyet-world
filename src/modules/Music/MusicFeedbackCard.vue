@@ -10,7 +10,7 @@ const stars = computed(() => Array.from({ length: 5 }, (_, index) => index < Mat
 </script>
 <template>
     <div class="grid grid-cols-3 gap-5 rounded-3xl border border-pink-200 bg-white p-5 shadow-sm">
-        <img :src="props.feedback.image_url" :alt="props.feedback.song" class="size-fit rounded-2xl self-center col-span-1">
+        <img :src="props.feedback.image_url" :alt="props.feedback.song" class="size-24 rounded-2xl self-center col-span-1">
         <div class="flex flex-col gap-2 col-span-2">
             <div class="flex flex-col gap-2">
                 <h1>{{ props.feedback.song }}</h1>
