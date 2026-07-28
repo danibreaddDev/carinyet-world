@@ -8,6 +8,6 @@ const props = defineProps<{
 </script>
 <template>
     <section class="grid grid-cols-1 md:grid-cols-2 gap-5">
-        <PlanCard v-for="plan in plans" :plan="plan" />
+        <PlanCard v-for="plan in plans" :key="plan.id" :plan="plan" />
     </section>
 </template>
