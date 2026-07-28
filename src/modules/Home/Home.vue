@@ -25,5 +25,6 @@ const selectedCharacter = sessionStorage.getItem('selectedCharacter') ?? 'kuromi
     <section class="grid grid-cols-2 gap-5 w-full">
         <HomeCard :title="'Musiquita'" :character-id="selectedCharacter" :tag="'music'" to="music" />
         <HomeCard :title="'Planes'" :character-id="selectedCharacter" to="plans" />
+        <HomeCard :title="'Recuerdos'" :character-id="selectedCharacter" to="memories" :tag="'memories'" />
     </section>
 </template>

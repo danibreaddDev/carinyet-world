@@ -165,7 +165,7 @@ export function usePlanMemoryUpload(
     uploadMessage.value = "";
 
     try {
-      const filePath = `plans/${plan.id}/${Date.now()}-${file.name}`;
+      const filePath = `plans/${plan.id}/${file.name}`;
       const { error: uploadErrorData } = await supabase.storage
         .from(bucketName)
         .upload(filePath, file, {
@@ -177,13 +177,12 @@ export function usePlanMemoryUpload(
         throw uploadErrorData;
       }
 
-      const { data: publicUrlData } = supabase.storage
-        .from(bucketName)
-        .getPublicUrl(filePath);
-
       const { error: updateError } = await supabase
         .from("Planner")
-        .update({ is_completed: true, memory_url: publicUrlData.publicUrl })
+        .update({
+          is_completed: true,
+          memory_url: `plans/${plan.id}/${file.name}`,
+        })
         .eq("id", plan.id);
 
       if (updateError) {
