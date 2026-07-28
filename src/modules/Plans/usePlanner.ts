@@ -1,5 +1,14 @@
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+  type Ref,
+} from "vue";
 import { supabase } from "../../core/lib/supabaseClient.ts";
+import { usePlansStore } from "../../stores/plans";
+import type { Plan as StoredPlan } from "../../stores/plans";
 import { useSpotifyStore } from "../../stores/spotify.ts";
 
 export type Plan = {
@@ -130,6 +139,81 @@ const noHoverMessages = [
   "Tu destino esta en el otro boton.",
   "No huyas de nuestra cita.",
 ];
+
+export function usePlanMemoryUpload(
+  plan: StoredPlan,
+  fileInputRef: Ref<HTMLInputElement | null>,
+) {
+  const plansStore = usePlansStore();
+  const isUploading = ref(false);
+  const uploadMessage = ref("");
+  const uploadError = ref("");
+  const pendingMemoryUpload = computed(() => plan.is_completed !== true);
+
+  const bucketName = import.meta.env.VITE_SUPABASE_MEMORIES_BUCKET;
+
+  async function handleMemoryUpload(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    isUploading.value = true;
+    uploadError.value = "";
+    uploadMessage.value = "";
+
+    try {
+      const filePath = `plans/${plan.id}/${Date.now()}-${file.name}`;
+      const { error: uploadErrorData } = await supabase.storage
+        .from(bucketName)
+        .upload(filePath, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
+
+      if (uploadErrorData) {
+        throw uploadErrorData;
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from(bucketName)
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from("Planner")
+        .update({ is_completed: true, memory_url: publicUrlData.publicUrl })
+        .eq("id", plan.id);
+
+      if (updateError) {
+        throw updateError;
+      }
+
+      uploadMessage.value = "Recuerdo adjuntado correctamente";
+      await plansStore.getPlans();
+    } catch (error) {
+      console.error(error);
+      uploadError.value = "No se pudo adjuntar el recuerdo. Intenta de nuevo.";
+    } finally {
+      isUploading.value = false;
+      input.value = "";
+    }
+  }
+
+  function triggerFilePicker() {
+    fileInputRef.value?.click();
+  }
+
+  return {
+    isUploading,
+    uploadMessage,
+    uploadError,
+    pendingMemoryUpload,
+    handleMemoryUpload,
+    triggerFilePicker,
+  };
+}
 
 export function usePlanner() {
   const step = ref(0);
@@ -269,6 +353,7 @@ export function usePlanner() {
       plans: selectedPlans.value,
       food: selectedFood.value || null,
       note: pickupNote.value || null,
+      is_completed: false,
       user_id: useSpotifyStore().user?.id,
       created_at: new Date().toISOString(),
     };

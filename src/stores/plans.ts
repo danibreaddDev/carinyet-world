@@ -11,6 +11,7 @@ export type Plan = {
   user_id: string;
   avatar_url?: string;
   username?: string;
+  is_completed?: boolean | null;
 };
 
 export const usePlansStore = defineStore("plans", {
@@ -29,17 +30,23 @@ export const usePlansStore = defineStore("plans", {
         console.warn("error ->", error);
         return;
       }
-      this.plans = (data ?? []).map((plan) => ({
-        id: plan.id,
-        date: plan.date,
-        mood: plan.mood,
-        plans: plan.plans,
-        food: plan.food,
-        note: plan.note,
-        user_id: plan.user_id,
-        avatar_url: plan.Profiles?.avatar_url,
-        username: plan.Profiles?.username,
-      }));
+      this.plans = (data ?? [])
+        .filter((plan) => plan.is_completed !== true)
+        .map((plan) => ({
+          id: plan.id,
+          date: plan.date,
+          mood: plan.mood,
+          plans: plan.plans,
+          food: plan.food,
+          note: plan.note,
+          user_id: plan.user_id,
+          avatar_url: plan.Profiles?.avatar_url,
+          username: plan.Profiles?.username,
+          is_completed: plan.is_completed ?? false,
+        }))
+        .sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
+        );
     },
   },
 });
