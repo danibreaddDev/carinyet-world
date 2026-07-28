@@ -46,6 +46,11 @@ const routes = [
       },
     ],
   },
+  {
+    path: "/memories",
+    name: "Memories",
+    component: () => import("./modules/Memories/Memories.vue"),
+  },
 ];
 export const router = createRouter({
   history: createWebHistory(),
