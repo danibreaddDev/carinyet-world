@@ -51,6 +51,26 @@ const routes = [
     name: "Memories",
     component: () => import("./modules/Memories/Memories.vue"),
   },
+  {
+    path: "/goofy-notes",
+    children: [
+      {
+        path: "",
+        name: "GoofyNotes",
+        component: () => import("./modules/GoofyNotes/GoofyNotes.vue"),
+      },
+      {
+        path: "new",
+        name: "GoofyNotesNew",
+        component: () => import("./modules/GoofyNotes/GoofyNotesForm.vue"),
+      },
+      {
+        path: ":id",
+        name: "GoofyNotesDetail",
+        component: () => import("./modules/GoofyNotes/GoofyNotesDetail.vue"),
+      },
+    ],
+  },
 ];
 export const router = createRouter({
   history: createWebHistory(),
