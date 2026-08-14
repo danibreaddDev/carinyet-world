@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import type { GoofyNote } from "../../stores/goofynotes";
-import { COLOR_OPTIONS, COLOR_MAP } from "./colors";
+import { COLOR_OPTIONS } from "./colors";
 import plusIcon from "@iconify-vue/mdi/add-circle";
 import CloseIcon from "@iconify-vue/mdi/close";
 import { useGoofyNotes } from "./useGoofyNotes";
@@ -16,7 +16,6 @@ const emit = defineEmits(["close", "saved"] as const);
 const {
   noteName,
   participantInput,
-  participantColor,
   punishmentInput,
   participants,
   punishments,
@@ -41,7 +40,6 @@ watch(
 );
 
 const colors = COLOR_OPTIONS;
-const colorMap = COLOR_MAP;
 
 const showColorPicker = ref(false);
 const pendingName = ref("");
