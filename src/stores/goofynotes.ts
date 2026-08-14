@@ -1,33 +1,18 @@
 import { defineStore } from "pinia";
 import { supabase } from "../core/lib/supabaseClient";
 import { useUserStore } from "./user";
+import type { ColorKey } from "../modules/GoofyNotes/colors";
+
+export type ParticipantObj = { participant: string; color?: ColorKey };
 
 export type GoofyNote = {
   id?: number | string;
   name: string;
-  participants: string[];
+  participants: ParticipantObj[];
   punishments: string[];
+  notes?: Record<string, string[]>;
   user_id?: string | null;
 };
-
-const STORAGE_KEY = "goofynotes-local-cache";
-
-function readLocalNotes(): GoofyNote[] {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as GoofyNote[]) : [];
-  } catch {
-    return [];
-  }
-}
-
-function writeLocalNotes(notes: GoofyNote[]) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-  } catch {
-    // ignore storage issues
-  }
-}
 
 export const useGoofyNotesStore = defineStore("goofynotes", {
   state: () => ({
@@ -47,21 +32,16 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
       try {
         const { data, error } = await supabase
           .from("GoofyNotes")
-          .select("id,name,participants,punishments,user_id")
+          .select("id,name,participants,punishments,notes,user_id")
           .eq("user_id", userStore.user?.id);
         if (error) {
           throw error;
         }
 
         this.notes = (data ?? []) as GoofyNote[];
-
-        if (!this.notes.length) {
-          const localNotes = readLocalNotes();
-          this.notes = localNotes;
-        }
       } catch (error) {
         console.warn("Goofy notes fallback to local storage:", error);
-        this.notes = readLocalNotes();
+        this.notes = [];
         this.error = "No se pudieron cargar las notas desde Supabase.";
       } finally {
         this.isLoading = false;
@@ -75,7 +55,9 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
       const userStore = useUserStore();
       const safeNote: GoofyNote = {
         name: note.name.trim(),
-        participants: note.participants.filter(Boolean),
+        participants: (note.participants || []).filter(
+          (p: any) => p && p.participant,
+        ),
         punishments: note.punishments.filter(Boolean),
         user_id: userStore.user?.id ?? null,
       };
@@ -84,7 +66,7 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
         const { data, error } = await supabase
           .from("GoofyNotes")
           .insert(safeNote)
-          .select("id,name,participants,punishments,user_id")
+          .select("id,name,participants,punishments,notes,user_id")
           .single();
 
         if (error) {
@@ -97,20 +79,11 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
         } as GoofyNote;
 
         this.notes = [savedNote, ...this.notes];
-        writeLocalNotes(this.notes);
         return savedNote;
       } catch (error) {
-        console.warn("Save goofy note fallback to local storage:", error);
-
-        const fallbackItem: GoofyNote = {
-          id: Date.now(),
-          ...safeNote,
-        };
-
-        const nextNotes = [fallbackItem, ...this.notes];
-        this.notes = nextNotes;
-        writeLocalNotes(nextNotes);
-        return fallbackItem;
+        console.warn("Save goofy note failed:", error);
+        this.error = "No se pudo guardar la nota en Supabase.";
+        return null as any;
       } finally {
         this.isSaving = false;
       }
@@ -122,7 +95,7 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
       try {
         const { data, error } = await supabase
           .from("GoofyNotes")
-          .select("id,name,participants,punishments,user_id")
+          .select("id,name,participants,punishments,notes,user_id")
           .eq("id", id)
           .single();
 
@@ -138,6 +111,51 @@ export const useGoofyNotesStore = defineStore("goofynotes", {
         this.error = "No se pudo cargar la nota.";
       } finally {
         this.isLoading = false;
+      }
+    },
+    async updateNote(id: string | number, payload: Partial<GoofyNote>) {
+      this.isSaving = true;
+      this.error = "";
+
+      try {
+        const safePayload: Partial<GoofyNote> = {};
+        if (payload.name !== undefined)
+          safePayload.name = String(payload.name).trim();
+        if (payload.participants !== undefined)
+          safePayload.participants = (payload.participants || []).filter(
+            (p: any) => p && p.participant,
+          );
+        if (payload.punishments !== undefined)
+          safePayload.punishments = (payload.punishments || []).filter(Boolean);
+
+        const { data, error } = await supabase
+          .from("GoofyNotes")
+          .update(safePayload)
+          .eq("id", id)
+          .select("id,name,participants,punishments,notes,user_id")
+          .single();
+
+        if (error) throw error;
+
+        const updated = { ...(data ?? {}), ...safePayload } as GoofyNote;
+
+        // update list
+        this.notes = this.notes.map((n) =>
+          String(n.id) === String(id) ? updated : n,
+        );
+
+        // if current note opened, update it
+        if (this.note && String(this.note.id) === String(id)) {
+          this.note = updated;
+        }
+
+        return updated;
+      } catch (error) {
+        console.warn("Failed to update goofy note:", error);
+        this.error = "No se pudo actualizar la nota.";
+        return null as any;
+      } finally {
+        this.isSaving = false;
       }
     },
   },

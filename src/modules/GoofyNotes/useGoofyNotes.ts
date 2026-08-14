@@ -1,13 +1,48 @@
 import { computed, ref } from "vue";
 import { useGoofyNotesStore } from "../../stores/goofynotes";
+import { supabase } from "../../core/lib/supabaseClient";
+import type { ColorKey } from "./colors";
+
+export async function saveMoments(
+  noteId: string | number,
+  moments: Record<string, string[]>,
+) {
+  try {
+    const { error } = await supabase
+      .from("GoofyNotes")
+      .update({ notes: moments })
+      .eq("id", noteId);
+    if (error) {
+      console.warn("Failed to sync moments to Supabase:", error);
+      return { ok: false, error };
+    }
+    return { ok: true };
+  } catch (e) {
+    console.warn("Supabase sync error:", e);
+    return { ok: false, error: e };
+  }
+}
+
+export function loadMomentsFromNote(note: any): Record<string, string[]> {
+  if (!note || !note.id) return {};
+  try {
+    if (note.notes && typeof note.notes === "object") {
+      return note.notes as Record<string, string[]>;
+    }
+    return {};
+  } catch (e) {
+    return {};
+  }
+}
 
 export function useGoofyNotes() {
   const goofyNotesStore = useGoofyNotesStore();
 
   const noteName = ref("");
   const participantInput = ref("");
+  const participantColor = ref<ColorKey | undefined>(undefined);
   const punishmentInput = ref("");
-  const participants = ref<string[]>([]);
+  const participants = ref<{ participant: string; color?: ColorKey }[]>([]);
   const punishments = ref<string[]>([]);
 
   const participantLabel = computed(() =>
@@ -16,21 +51,27 @@ export function useGoofyNotes() {
       : "Ningún participante seleccionado",
   );
 
-  const addParticipant = () => {
+  const addParticipant = (color?: ColorKey) => {
     const value = participantInput.value.trim();
+    const col = color ?? participantColor.value ?? (undefined as any);
 
-    if (!value || participants.value.includes(value)) {
+    if (!value || participants.value.some((p) => p.participant === value)) {
       participantInput.value = "";
+      participantColor.value = undefined;
       return;
     }
 
-    participants.value = [...participants.value, value];
+    participants.value = [
+      ...participants.value,
+      { participant: value, color: col },
+    ];
     participantInput.value = "";
+    participantColor.value = undefined;
   };
 
-  const removeParticipant = (participant: string) => {
+  const removeParticipant = (participantName: string) => {
     participants.value = participants.value.filter(
-      (item) => item !== participant,
+      (item) => item.participant !== participantName,
     );
   };
 
@@ -58,6 +99,27 @@ export function useGoofyNotes() {
     punishments.value = [];
   };
 
+  const initEdit = (note: any) => {
+    noteName.value = note?.name ?? "";
+    participants.value = (note?.participants || []).map((p: any) => ({
+      participant: p.participant,
+      color: p.color,
+    })) as any;
+    punishments.value = (note?.punishments || []).slice();
+  };
+
+  const updateNote = async (id: string | number) => {
+    if (!id) return null;
+    const payload = {
+      name: noteName.value.trim(),
+      participants: participants.value,
+      punishments: punishments.value,
+    } as Partial<any>;
+
+    const updated = await goofyNotesStore.updateNote(id, payload);
+    return updated;
+  };
+
   const saveNote = async () => {
     if (!noteName.value.trim() || !participants.value.length) {
       return false;
@@ -76,6 +138,7 @@ export function useGoofyNotes() {
   return {
     noteName,
     participantInput,
+    participantColor,
     punishmentInput,
     participants,
     punishments,
@@ -89,5 +152,9 @@ export function useGoofyNotes() {
     isLoading: computed(() => goofyNotesStore.isLoading),
     error: computed(() => goofyNotesStore.error),
     resetForm,
+    initEdit,
+    updateNote,
+    saveMoments,
+    loadMomentsFromNote,
   };
 }
