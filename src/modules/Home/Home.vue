@@ -27,5 +27,7 @@ const selectedCharacter = sessionStorage.getItem('selectedCharacter') ?? 'kuromi
         <HomeCard :title="'Musiquita'" :character-id="selectedCharacter" :tag="'music'" to="music" />
         <HomeCard :title="'Planes'" :character-id="selectedCharacter" to="plans" />
         <HomeCard :title="'Recuerdos'" :character-id="selectedCharacter" to="memories" :tag="'memories'" />
+        <HomeCard :title="'Goofy notes'" :character-id="selectedCharacter" to="goofy-notes" :tag="'goofy'" />
+
     </section>
 </template>
