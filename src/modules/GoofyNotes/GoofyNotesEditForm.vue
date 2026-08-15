@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import type { GoofyNote } from "../../stores/goofynotes";
+import { useGoofyNotesStore } from "../../stores/goofynotes";
 import { COLOR_OPTIONS } from "./colors";
 import plusIcon from "@iconify-vue/mdi/add-circle";
 import CloseIcon from "@iconify-vue/mdi/close";
@@ -28,6 +29,8 @@ const {
   resetForm,
   isSaving,
 } = useGoofyNotes();
+
+const goofyNotesStore = useGoofyNotesStore();
 
 watch(
   () => props.visible,
@@ -65,6 +68,7 @@ function confirmColor(key?: any) {
 const onSave = async () => {
   const updated = await updateNote(props.note.id as any);
   if (updated) {
+    await goofyNotesStore.loadNoteById(String(props.note.id));
     emit("saved", updated);
     emit("close");
     resetForm();
