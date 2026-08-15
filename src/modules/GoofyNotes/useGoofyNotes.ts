@@ -8,14 +8,56 @@ export async function saveMoments(
   moments: Record<string, string[]>,
 ) {
   try {
-    const { error } = await supabase
+    const store = useGoofyNotesStore();
+    const currentNote =
+      (store.note && String(store.note.id) === String(noteId)
+        ? store.note
+        : store.notes.find((note) => String(note.id) === String(noteId))) ??
+      null;
+
+    const currentParticipants = Array.isArray(currentNote?.participants)
+      ? currentNote.participants
+      : [];
+
+    const nextParticipants =
+      currentParticipants.length > 0
+        ? currentParticipants.map((participant: any) => ({
+            participant: participant.participant,
+            color: participant.color,
+            notes: Array.isArray(moments?.[participant.participant])
+              ? moments[participant.participant].filter(Boolean)
+              : [],
+          }))
+        : Object.keys(moments ?? {}).map((participantName) => ({
+            participant: participantName,
+            notes: Array.isArray(moments[participantName])
+              ? moments[participantName].filter(Boolean)
+              : [],
+          }));
+
+    const { error: updateError } = await supabase
       .from("GoofyNotes")
-      .update({ notes: moments })
+      .update({ participants: nextParticipants })
       .eq("id", noteId);
-    if (error) {
-      console.warn("Failed to sync moments to Supabase:", error);
-      return { ok: false, error };
+
+    if (updateError) {
+      console.warn("Failed to sync moments to Supabase:", updateError);
+      return { ok: false, error: updateError };
     }
+
+    if (store.note && String(store.note.id) === String(noteId)) {
+      store.note = {
+        ...store.note,
+        participants: nextParticipants,
+      };
+    }
+
+    store.notes = store.notes.map((note) =>
+      String(note.id) === String(noteId)
+        ? { ...note, participants: nextParticipants }
+        : note,
+    );
+
     return { ok: true };
   } catch (e) {
     console.warn("Supabase sync error:", e);
@@ -26,10 +68,21 @@ export async function saveMoments(
 export function loadMomentsFromNote(note: any): Record<string, string[]> {
   if (!note || !note.id) return {};
   try {
-    if (note.notes && typeof note.notes === "object") {
-      return note.notes as Record<string, string[]>;
-    }
-    return {};
+    const participants: Array<{ participant: string; notes?: string[] }> =
+      Array.isArray(note.participants) ? note.participants : [];
+
+    return participants.reduce<Record<string, string[]>>(
+      (
+        accumulator: Record<string, string[]>,
+        participant: { participant: string; notes?: string[] },
+      ) => {
+        accumulator[participant.participant] = Array.isArray(participant.notes)
+          ? participant.notes.filter(Boolean)
+          : [];
+        return accumulator;
+      },
+      {},
+    );
   } catch (e) {
     return {};
   }
@@ -42,7 +95,9 @@ export function useGoofyNotes() {
   const participantInput = ref("");
   const participantColor = ref<ColorKey | undefined>(undefined);
   const punishmentInput = ref("");
-  const participants = ref<{ participant: string; color?: ColorKey }[]>([]);
+  const participants = ref<
+    { participant: string; color?: ColorKey; notes?: string[] }[]
+  >([]);
   const punishments = ref<string[]>([]);
 
   const participantLabel = computed(() =>
@@ -63,7 +118,7 @@ export function useGoofyNotes() {
 
     participants.value = [
       ...participants.value,
-      { participant: value, color: col },
+      { participant: value, color: col, notes: [] },
     ];
     participantInput.value = "";
     participantColor.value = undefined;
@@ -104,12 +159,14 @@ export function useGoofyNotes() {
     participants.value = (note?.participants || []).map((p: any) => ({
       participant: p.participant,
       color: p.color,
+      notes: Array.isArray(p.notes) ? p.notes.filter(Boolean) : [],
     })) as any;
     punishments.value = (note?.punishments || []).slice();
   };
 
   const updateNote = async (id: string | number) => {
     if (!id) return null;
+
     const payload = {
       name: noteName.value.trim(),
       participants: participants.value,
@@ -117,7 +174,12 @@ export function useGoofyNotes() {
     } as Partial<any>;
 
     const updated = await goofyNotesStore.updateNote(id, payload);
-    return updated;
+    if (updated) {
+      await goofyNotesStore.loadNoteById(String(id));
+      return updated;
+    }
+
+    return null;
   };
 
   const saveNote = async () => {
@@ -125,11 +187,15 @@ export function useGoofyNotes() {
       return false;
     }
 
-    await goofyNotesStore.createNote({
+    const created = await goofyNotesStore.createNote({
       name: noteName.value.trim(),
       participants: participants.value,
       punishments: punishments.value,
     });
+
+    if (created && created.id) {
+      await goofyNotesStore.loadNoteById(String(created.id));
+    }
 
     resetForm();
     return true;
