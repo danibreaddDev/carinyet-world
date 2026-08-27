@@ -112,7 +112,7 @@ function closeProposalModal() {
             >
                 ✕
             </button>
-            <h3 id="proposal-title" class="pt-3 text-3xl font-black text-pink-400">¿Quiéres ser mi novia?</h3>
+            <h3 id="proposal-title" class="pt-3 text-3xl font-black text-pink-400">¿Quieres ser mi novia?</h3>
         </div>
     </div>
 </template>
