@@ -31,7 +31,7 @@ export function useSpotifyAuth() {
       options: {
         redirectTo: window.location.href,
         scopes:
-          "user-read-email user-read-private user-modify-playback-state user-read-playback-state",
+          "user-read-email user-read-private user-modify-playback-state user-read-playback-state playlist-read-private playlist-read-collaborative playlist-modify-public playlist-modify-private",
       },
     });
 

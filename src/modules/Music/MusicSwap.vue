@@ -5,6 +5,8 @@ import CardsHeartIcon from '@iconify-vue/mdi/cards-heart';
 import HeartOffIcon from '@iconify-vue/mdi/heart-off';
 import type { DbSong, SpotifyTrack } from '../../stores/music';
 import appleMusicIcon from "@iconify-vue/mdi/apple"
+import { useSpotifyStore } from '../../stores/spotify';
+import type { SpotifyPlaylist } from '../../stores/spotify';
 
 const props = defineProps<{
     isAuthenticated: boolean;
@@ -22,6 +24,12 @@ const activeFeedbackAction = ref<'increase' | 'decrease' | null>(null);
 const feedbackRating = ref(0);
 const feedbackMessage = ref('');
 const feedbackError = ref('');
+const spotifyStore = useSpotifyStore();
+const playlists = ref<SpotifyPlaylist[]>([]);
+const arePlaylistsVisible = ref(false);
+const isLoadingPlaylists = ref(false);
+const addingPlaylistId = ref<string | null>(null);
+const playlistMessage = ref('');
 
 const currentSongTitle = computed(() => props.spotifyTrack?.name ?? props.song?.spotifyId ?? 'Canción sin nombre');
 const currentArtist = computed(() => props.spotifyTrack?.artists?.join(', ') ?? 'Artista desconocido');
@@ -31,6 +39,8 @@ const openFeedbackModal = (action: 'increase' | 'decrease') => {
     feedbackRating.value = 0;
     feedbackMessage.value = '';
     feedbackError.value = '';
+    arePlaylistsVisible.value = false;
+    playlistMessage.value = '';
     isFeedbackModalOpen.value = true;
 };
 
@@ -40,6 +50,43 @@ const closeFeedbackModal = () => {
     feedbackRating.value = 0;
     feedbackMessage.value = '';
     feedbackError.value = '';
+    arePlaylistsVisible.value = false;
+    playlistMessage.value = '';
+};
+
+const togglePlaylists = async () => {
+    arePlaylistsVisible.value = !arePlaylistsVisible.value;
+    playlistMessage.value = '';
+
+    if (!arePlaylistsVisible.value || playlists.value.length > 0) return;
+
+    isLoadingPlaylists.value = true;
+    try {
+        playlists.value = await spotifyStore.loadPlaylists();
+    } catch (error) {
+        playlistMessage.value = error instanceof Error ? error.message : 'No se pudieron cargar las playlists.';
+    } finally {
+        isLoadingPlaylists.value = false;
+    }
+};
+
+const addCurrentSongToPlaylist = async (playlist: SpotifyPlaylist) => {
+    const trackId = props.spotifyTrack?.id;
+    if (!trackId) {
+        playlistMessage.value = 'No hay una canción de Spotify disponible.';
+        return;
+    }
+
+    addingPlaylistId.value = playlist.id;
+    playlistMessage.value = '';
+    try {
+        await spotifyStore.addTrackToPlaylist(playlist.id, trackId);
+        playlistMessage.value = `Canción añadida a ${playlist.name}.`;
+    } catch (error) {
+        playlistMessage.value = error instanceof Error ? error.message : 'No se pudo añadir la canción.';
+    } finally {
+        addingPlaylistId.value = null;
+    }
 };
 
 const submitFeedback = () => {
@@ -190,6 +237,36 @@ const openInSpotify = async () => {
                         placeholder="¿Te ha gustado la canción?"
                     />
                 </label>
+
+                <div class="flex flex-col gap-2">
+                    <button
+                        type="button"
+                        class="rounded-2xl border border-green-200 px-4 py-3 text-left font-semibold text-green-600 transition hover:bg-green-50"
+                        @click="togglePlaylists"
+                    >
+                        {{ arePlaylistsVisible ? 'Ocultar playlists' : 'Añadir a una playlist de Spotify' }}
+                    </button>
+
+                    <div v-if="arePlaylistsVisible" class="flex max-h-44 flex-col gap-2 overflow-y-auto rounded-2xl bg-green-50 p-3">
+                        <span v-if="isLoadingPlaylists" class="text-sm text-green-700">Cargando playlists...</span>
+                        <span v-else-if="!playlists.length && !playlistMessage" class="text-sm text-green-700">
+                            No tienes playlists disponibles.
+                        </span>
+                        <button
+                            v-for="playlist in playlists"
+                            :key="playlist.id"
+                            type="button"
+                            class="flex items-center gap-3 rounded-xl bg-white px-3 py-2 text-left text-sm font-semibold text-green-700 transition hover:bg-green-100 disabled:cursor-wait disabled:opacity-60"
+                            :disabled="addingPlaylistId === playlist.id"
+                            @click="addCurrentSongToPlaylist(playlist)"
+                        >
+                            <img v-if="playlist.imageUrl" :src="playlist.imageUrl" :alt="playlist.name" class="size-9 rounded-lg object-cover" />
+                            <span>{{ addingPlaylistId === playlist.id ? 'Añadiendo...' : playlist.name }}</span>
+                        </button>
+                    </div>
+
+                    <p v-if="playlistMessage" class="text-sm font-medium text-green-600">{{ playlistMessage }}</p>
+                </div>
 
                 <p v-if="feedbackError" class="text-sm font-medium text-red-500">{{ feedbackError }}</p>
 
