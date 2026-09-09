@@ -118,6 +118,7 @@ export const useMusicStore = defineStore("music", {
       const { data, error } = await supabase
         .from("SongRating")
         .select("*")
+        .order("id", { ascending: false })
         .neq("user_id", useUserStore().user?.id);
       if (error) {
         console.warn("Song rating query failed:", error);
