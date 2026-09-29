@@ -4,9 +4,10 @@ import { useSpotifyStore } from "../../stores/spotify.ts";
 import { useCharacterStore } from "../../stores/character.ts";
 import { useUserStore } from "../../stores/user.ts";
 
-type FeedbackPayload = {
+export type FeedbackPayload = {
   rating: number;
   feedback: string;
+  characterId?: string;
 };
 
 const normalizeMusicValue = (value: string, type: "spotify" | "apple") => {
@@ -126,7 +127,11 @@ export function useMusicPage() {
     const shouldContinue = await saveFeedbackIfNeeded(feedbackPayload);
     if (!shouldContinue) return;
 
-    await characterStore.increaseLevel();
+    if (feedbackPayload?.characterId) {
+      await characterStore.increase_other_user_level(feedbackPayload.characterId);
+    } else {
+      await characterStore.increaseLevel();
+    }
     await musicStore.deleteSongRecommendation();
     await musicStore.loadSongAndSpotify();
   };
@@ -135,7 +140,11 @@ export function useMusicPage() {
     const shouldContinue = await saveFeedbackIfNeeded(feedbackPayload);
     if (!shouldContinue) return;
 
-    await characterStore.decreaseLevel();
+    if (feedbackPayload?.characterId) {
+      await characterStore.decrease_other_user_level(feedbackPayload.characterId);
+    } else {
+      await characterStore.decreaseLevel();
+    }
     await musicStore.deleteSongRecommendation();
     await musicStore.loadSongAndSpotify();
   };

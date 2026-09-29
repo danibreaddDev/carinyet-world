@@ -6,6 +6,7 @@ export type DbSong = {
   spotifyId: string;
   appleMusicId?: string | null;
   message: string;
+  user_id?: string;
 };
 
 export type SpotifyTrack = {
